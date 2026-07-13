@@ -1,7 +1,9 @@
 import 'package:get/get.dart';
+import 'package:sistem_pakar_skincare/database/dummy/produk_dummy.dart';
 
 import 'package:sistem_pakar_skincare/database/repository/rule_repository.dart';
 import 'package:sistem_pakar_skincare/database/repository/ruleMasalah_repository.dart';
+import 'package:sistem_pakar_skincare/database/repository/ruleProduk_reository.dart';
 
 import 'package:sistem_pakar_skincare/database/dummy/jenisKulit_dummy.dart';
 import 'package:sistem_pakar_skincare/database/dummy/masalahKulit_dummy.dart';
@@ -9,6 +11,7 @@ import 'package:sistem_pakar_skincare/database/dummy/masalahKulit_dummy.dart';
 import 'package:sistem_pakar_skincare/models/rule.dart';
 import 'package:sistem_pakar_skincare/models/jenisKulit.dart';
 import 'package:sistem_pakar_skincare/models/masalahKulit.dart';
+import 'package:sistem_pakar_skincare/models/produkSkincare.dart';
 
 class ForwardChainingController extends GetxController {
   final List<Rule> 
@@ -16,12 +19,18 @@ class ForwardChainingController extends GetxController {
   
   final List<Rule> skinProblemRules =
         ProblemRuleRepository.getRules();
+  
+  final List<Rule> productRules =
+        ProductRuleRepository.getRules();
 
   final List<SkinType> 
         skinTypes = SkinTypeDummy.data;
 
   final List<SkinProblem> skinProblems =
       SkinProblemDummy.data;
+
+  final List<SkincareProduct> products =
+    SkincareProductDummy.data;
 
   SkinType? diagnoseSkinType (Map<String,bool> jawaban){
     for(Rule rule in skinTyperules){
@@ -71,5 +80,41 @@ class ForwardChainingController extends GetxController {
       }
     }
     return null;
+  }
+
+  List<SkincareProduct> recommendProducts(
+    SkinType skinType,
+    SkinProblem skinProblem,
+  ) {
+
+    List<SkincareProduct> rekomendasi = [];
+    for (Rule rule in productRules) {
+      bool cocok = true;
+
+      for (String fakta in rule.gejala) {
+        if (fakta.startsWith("JK")) {
+          if (skinType.code != fakta) {
+            cocok = false;
+            break;
+          }
+        }
+        else if (fakta.startsWith("MK")) {
+          if (skinProblem.code != fakta) {
+            cocok = false;
+            break;
+          }
+        }
+      }
+      if (cocok) {
+        try {
+          final produk = products.firstWhere(
+            (item) => item.code == rule.hasil,
+          );
+          rekomendasi.add(produk);
+        }
+        catch (_) {}
+      }
+    }
+    return rekomendasi;
   }
 }

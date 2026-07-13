@@ -1,6 +1,4 @@
 import 'package:get/get.dart';
-import 'package:sistem_pakar_skincare/models/masalahKulit.dart';
-
 
 import '../models/gejala.dart';
 import '../database/dummy/gejala_dummy.dart';
@@ -69,10 +67,25 @@ class ChatbotController extends GetxController {
       return;
     }
 
+    final rekomendasi =
+      fc.recommendProducts(
+        skinType,
+        skinProblem,
+      );
+
+    String hasil = "";
+
+    for (final produk in rekomendasi) {
+      hasil += "• ${produk.name}\n";
+  }
+
     Get.snackbar(
       "Hasil Diagnosis",
-      "${skinType.name}\n${skinProblem.name}",
-      duration: const Duration(seconds: 4),
+      "${skinType.name}\n"
+      "${skinProblem.name}\n\n"
+      "$hasil",
+
+      duration: const Duration(seconds: 5),
     );
   }
 }
