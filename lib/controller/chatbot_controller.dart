@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:sistem_pakar_skincare/models/consultationResult.dart';
+import 'package:sistem_pakar_skincare/views/result_page.dart';
 
 import '../models/gejala.dart';
 import '../database/dummy/gejala_dummy.dart';
@@ -73,19 +75,17 @@ class ChatbotController extends GetxController {
         skinProblem,
       );
 
-    String hasil = "";
+    final result = ConsultationResult(
 
-    for (final produk in rekomendasi) {
-      hasil += "• ${produk.name}\n";
-  }
+    skinType: skinType,
 
-    Get.snackbar(
-      "Hasil Diagnosis",
-      "${skinType.name}\n"
-      "${skinProblem.name}\n\n"
-      "$hasil",
+    skinProblem: skinProblem,
 
-      duration: const Duration(seconds: 5),
-    );
-  }
+    products: rekomendasi,
+
+  );
+
+  Get.to(() => ResultPage(result: result));
+
+}
 }
