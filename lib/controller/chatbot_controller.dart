@@ -76,16 +76,12 @@ class ChatbotController extends GetxController {
       );
 
     final result = ConsultationResult(
-
-    skinType: skinType,
-
-    skinProblem: skinProblem,
-
-    products: rekomendasi,
-
+      skinType: skinType,
+      skinProblem: skinProblem,
+      products: rekomendasi,
   );
 
-  Get.to(() => ResultPage(result: result));
+    Get.to(() => ResultPage(result: result));
 
-}
+  }
 }
