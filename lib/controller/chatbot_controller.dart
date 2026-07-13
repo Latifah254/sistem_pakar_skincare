@@ -2,12 +2,20 @@ import 'package:get/get.dart';
 
 import '../models/gejala.dart';
 import '../database/dummy/gejala_dummy.dart';
+import 'forwardChaining_controller.dart';
 
 class ChatbotController extends GetxController {
   final RxInt currentIndex = 0.obs;
+
   final RxMap<String, bool> jawaban = <String, bool>{}.obs;
+
   final List<Gejala> daftarGejala = GejalaDummy.data;
+
+  final ForwardChainingController fc =
+    Get.put(ForwardChainingController());
+
   Gejala get gejalaSekarang => daftarGejala[currentIndex.value];
+
   bool get isPertanyaanTerakhir =>
       currentIndex.value == daftarGejala.length - 1;
   double get progress =>
@@ -33,18 +41,20 @@ class ChatbotController extends GetxController {
     jawaban.clear();
   }
 
-  void selesaiKonsultasi() {
-    Get.log("===== HASIL KONSULTASI =====");
-
-    jawaban.forEach((key, value) {
-      Get.log("$key : $value");
-    });
-
-    print(jawaban);
-
-    Get.snackbar("Konsultasi",
-    "Konsultasi Selesai",
-    snackPosition: SnackPosition.BOTTOM,
-    );
+  void selesaiKonsultasi(){
+    final hasil = fc.proses(jawaban);
+    if(hasil != null){
+      Get.snackbar(
+        "Diagnosis",
+        hasil.name,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }else{
+      Get.snackbar(
+        "Diagnosis",
+        "Jenis kulit belum dapat ditentukan",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 }
