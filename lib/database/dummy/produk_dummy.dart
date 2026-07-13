@@ -6,36 +6,41 @@ class SkincareProductDummy {
 
     SkincareProduct(
       id: 1,
+      code: "P01",
       name: "Salicylic Acid Facial Wash",
-      category: "Facial Wash",
+      brand: "Facial Wash",
       description: "Membersihkan minyak berlebih.",
     ),
 
     SkincareProduct(
       id: 2,
+      code: "P02",
       name: "Tea Tree Toner",
-      category: "Toner",
+      brand: "Toner",
       description: "Menenangkan kulit berjerawat.",
     ),
 
     SkincareProduct(
       id: 3,
+      code: "P03",
       name: "Niacinamide Serum",
-      category: "Serum",
+      brand: "Serum",
       description: "Mengurangi noda hitam.",
     ),
 
     SkincareProduct(
       id: 4,
+      code: "P04",
       name: "Oil Free Moisturizer",
-      category: "Moisturizer",
+      brand: "Moisturizer",
       description: "Menjaga kelembapan kulit.",
     ),
 
     SkincareProduct(
       id: 5,
+      code: "P05",
       name: "Matte Sunscreen SPF50",
-      category: "Sunscreen",
+      brand: "Sunscreen",
       description: "Melindungi kulit dari sinar UV.",
     ),
 
