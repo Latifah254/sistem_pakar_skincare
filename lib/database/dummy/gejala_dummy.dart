@@ -1,4 +1,4 @@
-import '../../models/gejala.dart';
+import '../../../models/gejala.dart';
 
 class GejalaDummy {
 

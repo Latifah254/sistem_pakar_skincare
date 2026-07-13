@@ -1,4 +1,4 @@
-import '../../models/masalahKulit.dart';
+import '../../../models/masalahKulit.dart';
 
 class SkinProblemDummy {
 

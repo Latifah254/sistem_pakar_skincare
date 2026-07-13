@@ -1,4 +1,4 @@
-import '../../models/jenisKulit.dart';
+import '../../../models/jenisKulit.dart';
 
 class SkinTypeDummy {
 

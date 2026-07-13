@@ -1,4 +1,4 @@
-import '../../models/produkSkincare.dart';
+import '../../../models/produkSkincare.dart';
 
 class SkincareProductDummy {
 

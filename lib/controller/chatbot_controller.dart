@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../models/gejala.dart';
-import '../database/gejala_dummy.dart';
+import '../database/dummy/gejala_dummy.dart';
 
 class ChatbotController extends GetxController {
   final RxInt currentIndex = 0.obs;
