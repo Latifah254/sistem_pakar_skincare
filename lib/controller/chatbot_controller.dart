@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:sistem_pakar_skincare/models/masalahKulit.dart';
+
 
 import '../models/gejala.dart';
 import '../database/dummy/gejala_dummy.dart';
@@ -42,19 +44,35 @@ class ChatbotController extends GetxController {
   }
 
   void selesaiKonsultasi(){
-    final hasil = fc.proses(jawaban);
-    if(hasil != null){
+    final skinType =
+        fc.diagnoseSkinType(jawaban);
+
+    if(skinType == null){
       Get.snackbar(
         "Diagnosis",
-        hasil.name,
-        snackPosition: SnackPosition.BOTTOM,
+        "Jenis kulit tidak ditemukan",
       );
-    }else{
-      Get.snackbar(
-        "Diagnosis",
-        "Jenis kulit belum dapat ditentukan",
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      return;
     }
+
+    final skinProblem =
+        fc.diagnoseSkinProblem(
+            skinType,
+            jawaban,
+        );
+
+    if(skinProblem == null){
+      Get.snackbar(
+        "Diagnosis",
+        skinType.name,
+      );
+      return;
+    }
+
+    Get.snackbar(
+      "Hasil Diagnosis",
+      "${skinType.name}\n${skinProblem.name}",
+      duration: const Duration(seconds: 4),
+    );
   }
 }
