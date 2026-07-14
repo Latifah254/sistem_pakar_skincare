@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import 'package:sistem_pakar_skincare/views/chatbot%20&%20result/chatbot_screen.dart';
+import 'package:sistem_pakar_skincare/widgets/primary_button.dart';
 
 class BannerCard extends StatelessWidget {
-  const BannerCard({super.key});
+  final VoidCallback onStart;
+  
+  const BannerCard({
+    super.key, 
+    required this.onStart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,21 +47,11 @@ class BannerCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor:
-                  const Color(0xff2E8B57),
-            ),
-
-            onPressed: () {
-              Get.to(
-                ()=> ChatbotScreen(),
-              );
-            },
-
-            child:
-                const Text("Mulai Konsultasi"),
+          
+          PrimaryButton(
+            text: "Mulai Konsultasi",
+            icon: Icons.arrow_forward,
+            onPressed: onStart,
           ),
         ],
       ),

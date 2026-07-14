@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:sistem_pakar_skincare/controller/home_controller.dart';
+import 'package:sistem_pakar_skincare/widgets/custom_card.dart';
 
 class TipsCard extends StatelessWidget {
   TipsCard({super.key});
@@ -11,7 +12,7 @@ class TipsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(

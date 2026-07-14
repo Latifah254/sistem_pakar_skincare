@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:sistem_pakar_skincare/widgets/feature_menu.dart';
 
 class QuickMenu extends StatelessWidget {
-  const QuickMenu({super.key});
+
+  final VoidCallback onConsultation;
+  final VoidCallback onAbout;
+  
+  const QuickMenu({
+    super.key, 
+    required this.onConsultation, 
+    required this.onAbout});
 
   @override
   Widget build(BuildContext context) {
@@ -9,33 +17,17 @@ class QuickMenu extends StatelessWidget {
       mainAxisAlignment:
           MainAxisAlignment.spaceAround,
       children: [
-        menu(
-          Icons.chat,
-          "Konsultasi",
+        FeatureMenu(
+          icon: Icons.chat,
+          title: "Konsultasi",
+          onTap: onConsultation,
         ),
 
-        menu(
-          Icons.info,
-          "About",
+        FeatureMenu(
+          icon: Icons.info,
+          title: "About",
+          onTap: onAbout,
         ),
-      ],
-    );
-  }
-
-  Widget menu(
-      IconData icon,
-      String title,
-  ) {
-
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 28,
-          child: Icon(icon),
-        ),
-
-        const SizedBox(height: 8),
-        Text(title),
       ],
     );
   }
