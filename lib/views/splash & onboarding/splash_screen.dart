@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:sistem_pakar_skincare/views/onboarding.dart';
+import 'package:sistem_pakar_skincare/views/splash%20&%20onboarding/onboarding.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

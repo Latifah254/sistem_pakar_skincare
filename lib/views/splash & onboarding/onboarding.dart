@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:sistem_pakar_skincare/theme/app_colors.dart';
 import 'package:sistem_pakar_skincare/theme/app_text_styles.dart';
-import 'package:sistem_pakar_skincare/views/home.dart';
+import 'package:sistem_pakar_skincare/views/home/home.dart';
 
 
 class OnboardingData {
