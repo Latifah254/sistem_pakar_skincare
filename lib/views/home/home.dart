@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:sistem_pakar_skincare/views/chatbot%20&%20result/chatbot_screen.dart';
+import 'package:sistem_pakar_skincare/views/chatbot/chatbot_screen.dart';
 import 'package:sistem_pakar_skincare/widgets/app_buttom_navbar.dart';
 import 'package:sistem_pakar_skincare/views/about/about_screen.dart';
 

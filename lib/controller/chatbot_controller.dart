@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:sistem_pakar_skincare/models/consultationResult.dart';
-import 'package:sistem_pakar_skincare/views/chatbot%20&%20result/result_page.dart';
+import 'package:sistem_pakar_skincare/views/result/result_page.dart';
 
 import '../models/gejala.dart';
 import '../database/dummy/gejala_dummy.dart';
