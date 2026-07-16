@@ -1,57 +1,109 @@
 import 'package:flutter/material.dart';
 
-import 'package:sistem_pakar_skincare/widgets/primary_button.dart';
-
 class BannerCard extends StatelessWidget {
   final VoidCallback onStart;
-  
+
   const BannerCard({
-    super.key, 
+    super.key,
     required this.onStart,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      width: double.infinity,
+
+      padding: const EdgeInsets.all(24),
+
       decoration: BoxDecoration(
-        borderRadius:
-            BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(28),
+
         gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
           colors: [
-            Color(0xff5DB075),
+            Color(0xff37A866),
             Color(0xff2E8B57),
           ],
         ),
+
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xff2E8B57).withOpacity(.18),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
       ),
 
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           const Text(
-            "AI Skincare Expert",
+            "Mulai Konsultasi",
             style: TextStyle(
               color: Colors.white,
+              fontSize: 28,
               fontWeight: FontWeight.bold,
-              fontSize: 22,
             ),
           ),
 
           const SizedBox(height: 10),
+
           const Text(
-            "Kenali kondisi kulitmu\nhanya dalam beberapa menit.",
+            "Jawab beberapa pertanyaan\nseputar kondisi kulitmu",
             style: TextStyle(
-              color: Colors.white,
+              color: Colors.white70,
+              fontSize: 16,
+              height: 1.5,
             ),
           ),
 
-          const SizedBox(height: 20),
-          
-          PrimaryButton(
-            text: "Mulai Konsultasi",
-            icon: Icons.arrow_forward,
-            onPressed: onStart,
+          const SizedBox(height: 28),
+
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+
+            child: ElevatedButton(
+
+              onPressed: onStart,
+
+              style: ElevatedButton.styleFrom(
+
+                backgroundColor: Colors.white,
+
+                foregroundColor: const Color(0xff2E8B57),
+
+                elevation: 0,
+
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.circular(18),
+                ),
+
+              ),
+
+              child: Row(
+                mainAxisAlignment:
+                    MainAxisAlignment.center,
+                children: const [
+
+                  Text(
+                    "Mulai Sekarang",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  SizedBox(width: 10),
+
+                  Icon(Icons.arrow_forward_rounded),
+                ],
+              ),
+            ),
           ),
         ],
       ),
