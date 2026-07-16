@@ -4,6 +4,9 @@ class SkincareProduct {
   final String name;
   final String brand;
   final String description;
+  final String ingredient;
+  final String usage;
+  final String image;
 
   SkincareProduct({
     required this.id,
@@ -11,6 +14,9 @@ class SkincareProduct {
     required this.name,
     required this.brand,
     required this.description,
+    required this.ingredient,
+    required this.usage,
+    required this.image,
   });
 
   factory SkincareProduct.fromJson(Map<String, dynamic> json) {
@@ -20,6 +26,9 @@ class SkincareProduct {
       name: json['name'],
       brand: json['category'],
       description: json['description'],
+      ingredient: json["ingredient"],
+      usage: json["usage"],
+      image: json["image"],
     );
   }
 
@@ -30,6 +39,9 @@ class SkincareProduct {
       "name": name,
       "category": brand,
       "description": description,
+      "ingredient":ingredient,
+      "usage":usage,
+      "image":image,
     };
   }
 }
