@@ -1,89 +1,232 @@
 import 'package:get/get.dart';
+
+import 'package:sistem_pakar_skincare/database/dummy/gejala_dummy.dart';
+import 'package:sistem_pakar_skincare/models/chat_message.dart';
 import 'package:sistem_pakar_skincare/models/consultationResult.dart';
+import 'package:sistem_pakar_skincare/models/gejala.dart';
+
 import 'package:sistem_pakar_skincare/views/thinking/thinking_screen.dart';
 
-import '../models/gejala.dart';
-import '../database/dummy/gejala_dummy.dart';
 import 'forwardChaining_controller.dart';
 
 class ChatbotController extends GetxController {
+
   final RxInt currentIndex = 0.obs;
 
-  final RxMap<String, bool> jawaban = <String, bool>{}.obs;
+  final RxMap<String,bool> jawaban =
+      <String,bool>{}.obs;
 
-  final List<Gejala> daftarGejala = GejalaDummy.data;
+  final RxList<ChatMessage> messages =
+      <ChatMessage>[].obs;
+
+  final List<Gejala> daftarGejala =
+      GejalaDummy.data;
 
   final ForwardChainingController fc =
-    Get.put(ForwardChainingController());
+      Get.put(ForwardChainingController());
+  
+  final RxBool isFinished = false.obs;
 
-  Gejala get gejalaSekarang => daftarGejala[currentIndex.value];
+  Gejala get gejalaSekarang =>
+      daftarGejala[currentIndex.value];
 
   bool get isPertanyaanTerakhir =>
-      currentIndex.value == daftarGejala.length - 1;
+      currentIndex.value ==
+          daftarGejala.length-1;
+
   double get progress =>
-      (currentIndex.value + 1) / daftarGejala.length;
+      (currentIndex.value+1)/
+      daftarGejala.length;
 
-  void jawab(bool nilai) {
+  @override
+  void onInit(){
+
+    super.onInit();
+
+    messages.add(
+
+      ChatMessage(
+
+        text:
+        "Halo SkinMate 👋\n\n"
+        "Saya SkinSense AI.\n"
+        "Saya akan membantu menganalisis kondisi kulitmu.\n\n"
+        "Silakan jawab beberapa pertanyaan berikut.",
+
+        isBot: true,
+
+      ),
+
+    );
+
+    messages.add(
+
+      ChatMessage(
+
+        text: gejalaSekarang.question,
+
+        isBot: true,
+
+      ),
+
+    );
+
+  }
+
+  void jawab(bool nilai){
+
     jawaban[gejalaSekarang.code] = nilai;
-    if (!isPertanyaanTerakhir) {
+
+    messages.add(
+
+      ChatMessage(
+
+        text: nilai
+            ? "Ya"
+            : "Tidak",
+
+        isBot: false,
+
+      ),
+
+    );
+
+    if(!isPertanyaanTerakhir){
+
       currentIndex.value++;
-    } else {
-      selesaiKonsultasi();
+
+      messages.add(
+
+        ChatMessage(
+
+          text: gejalaSekarang.question,
+
+          isBot: true,
+
+        ),
+
+      );
+
     }
+
+    else{
+
+      isFinished.value = true;
+
+        messages.add(
+
+          ChatMessage(
+
+            text:
+            "Terima kasih 😊\n\n"
+            "Saya sedang menganalisis jawabanmu...",
+
+            isBot: true,
+
+        ),
+
+      );
+
+      Future.delayed(
+
+        const Duration(seconds: 1),
+
+        (){
+
+          selesaiKonsultasi();
+
+        },
+
+      );
+
+    }
+
   }
 
-  void kembali() {
-    if (currentIndex.value > 0) {
-      currentIndex.value--;
-    }
-  }
+  void reset(){
 
-  void reset() {
-    currentIndex.value = 0;
+    currentIndex.value=0;
+
     jawaban.clear();
+
+    messages.clear();
+
+    onInit();
+
   }
 
   void selesaiKonsultasi(){
-    final skinType =
-        fc.diagnoseSkinType(jawaban);
 
-    if(skinType == null){
+    final skinType =
+    fc.diagnoseSkinType(jawaban);
+
+    if(skinType==null){
+
       Get.snackbar(
+
         "Diagnosis",
+
         "Jenis kulit tidak ditemukan",
+
       );
+
       return;
+
     }
 
     final skinProblem =
-        fc.diagnoseSkinProblem(
-            skinType,
-            jawaban,
-        );
+    fc.diagnoseSkinProblem(
 
-    if(skinProblem == null){
+      skinType,
+
+      jawaban,
+
+    );
+
+    if(skinProblem==null){
+
       Get.snackbar(
+
         "Diagnosis",
+
         skinType.name,
+
       );
+
       return;
+
     }
 
-    final rekomendasi =
-      fc.recommendProducts(
-        skinType,
-        skinProblem,
-      );
+    final products =
+    fc.recommendProducts(
 
-    final result = ConsultationResult(
+      skinType,
+
+      skinProblem,
+
+    );
+
+    final result =
+    ConsultationResult(
+
       skinType: skinType,
-      skinProblem: skinProblem,
-      products: rekomendasi,
-  );
 
-    Get.to(
-      () => ThinkingScreen(
-                result: result));
+      skinProblem: skinProblem,
+
+      products: products,
+
+    );
+
+    Get.off(
+
+          ()=>ThinkingScreen(
+
+        result: result,
+
+      ),
+
+    );
 
   }
+
 }
