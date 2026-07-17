@@ -102,7 +102,7 @@ class _SplashScreenState
 
                   child: Image.asset(
 
-                    "assets/images/UISI.png",
+                    "assets/icons/logo.png",
 
                     width: 140,
 
