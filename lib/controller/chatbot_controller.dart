@@ -197,17 +197,24 @@ class ChatbotController extends GetxController {
 
     }
 
-    final products =
+    final products = 
     fc.recommendProducts(
+      skinType,
+      skinProblem,
+
+    );
+
+    final confidence = fc.calculateConfidence(
 
       skinType,
 
       skinProblem,
 
+      jawaban,
+
     );
 
-    final result =
-    ConsultationResult(
+    final result = ConsultationResult(
 
       skinType: skinType,
 
@@ -215,11 +222,13 @@ class ChatbotController extends GetxController {
 
       products: products,
 
+      confidence: confidence,
+
     );
 
     Get.off(
 
-          ()=>ThinkingScreen(
+      () => ThinkingScreen(
 
         result: result,
 

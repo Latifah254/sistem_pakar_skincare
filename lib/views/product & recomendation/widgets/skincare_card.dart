@@ -14,28 +14,118 @@ class SkincareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      child: ListTile(
-        onTap: onTap,
-        leading: const CircleAvatar(
-          child: Icon(Icons.spa),
-        ),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
 
-        title: Text(product.name),
-        subtitle: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-          children: [
-            Text(product.brand),
-            const SizedBox(height: 5),
-            Text(product.description),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.05),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
           ],
         ),
 
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          size: 18,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            /// FOTO
+            Container(
+              width: 90,
+              height: 90,
+              padding: const EdgeInsets.all(8),
+
+              decoration: BoxDecoration(
+                color: const Color(0xffF7F7F7),
+                borderRadius: BorderRadius.circular(18),
+              ),
+
+              child: Image.asset(
+                product.image,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(width: 16),
+
+            /// INFORMASI
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+
+                  Text(
+                    product.name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  Text(
+                    product.brand,
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    product.description,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      height: 1.45,
+                      fontSize: 14,
+                      color: Color(0xff555555),
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  InkWell(
+                    onTap: onTap,
+
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+
+                        Text(
+                          "Lihat Detail",
+                          style: TextStyle(
+                            color: Color(0xff2E8B57),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+
+                        SizedBox(width: 6),
+
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: Color(0xff2E8B57),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
