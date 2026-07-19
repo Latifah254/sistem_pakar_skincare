@@ -1,12 +1,11 @@
 import 'package:get/get.dart';
-import 'package:sistem_pakar_skincare/database/dummy/produk_dummy.dart';
 
-import 'package:sistem_pakar_skincare/database/repository/rule_repository.dart';
+import 'package:sistem_pakar_skincare/database/repository/problem_repository.dart';
+import 'package:sistem_pakar_skincare/database/repository/produk_repository.dart';
 import 'package:sistem_pakar_skincare/database/repository/ruleMasalah_repository.dart';
 import 'package:sistem_pakar_skincare/database/repository/ruleProduk_reository.dart';
-
-import 'package:sistem_pakar_skincare/database/dummy/jenisKulit_dummy.dart';
-import 'package:sistem_pakar_skincare/database/dummy/masalahKulit_dummy.dart';
+import 'package:sistem_pakar_skincare/database/repository/rule_repository.dart';
+import 'package:sistem_pakar_skincare/database/repository/skinType_repository.dart';
 
 import 'package:sistem_pakar_skincare/models/rule.dart';
 import 'package:sistem_pakar_skincare/models/jenisKulit.dart';
@@ -15,237 +14,304 @@ import 'package:sistem_pakar_skincare/models/produkSkincare.dart';
 
 class ForwardChainingController extends GetxController {
 
-  final List<Rule> skinTyperules =
-      RuleRepository.getRules();
+  final RxList<Rule> skinTypeRules = <Rule>[].obs;
+  final RxList<Rule> skinProblemRules = <Rule>[].obs;
+  final RxList<Rule> productRules = <Rule>[].obs;
 
-  final List<Rule> skinProblemRules =
-      ProblemRuleRepository.getRules();
+  final RxList<SkinType> skinTypes = <SkinType>[].obs;
+  final RxList<SkinProblem> skinProblems = <SkinProblem>[].obs;
+  final RxList<SkincareProduct> products = <SkincareProduct>[].obs;
 
-  final List<Rule> productRules =
-      ProductRuleRepository.getRules();
+  @override
+  void onInit() {
+    super.onInit();
+    loadData();
+  }
 
-  final List<SkinType> skinTypes =
-      SkinTypeDummy.data;
+  Future<void> loadData() async {
 
-  final List<SkinProblem> skinProblems =
-      SkinProblemDummy.data;
+    skinTypes.assignAll(
+      await SkinTypeRepository.getSkinTypes(),
+    );
 
-  final List<SkincareProduct> products =
-      SkincareProductDummy.data;
+    skinProblems.assignAll(
+      await SkinProblemRepository.getSkinProblems(),
+    );
 
-  SkinType? diagnoseSkinType(
-      Map<String, bool> jawaban) {
+    products.assignAll(
+      await ProductRepository.getProducts(),
+    );
 
-    for (Rule rule in skinTyperules) {
+    skinTypeRules.assignAll(
+      await RuleRepository.getRules(),
+    );
 
-      bool cocok = true;
+    skinProblemRules.assignAll(
+      await ProblemRuleRepository.getRules(),
+    );
 
-      for (String kodeGejala in rule.gejala) {
+    productRules.assignAll(
+      await ProductRuleRepository.getRules(),
+    );
 
-        if (jawaban[kodeGejala] != true) {
+    print("Skin Type : ${skinTypes.length}");
+    print("Rule JK : ${skinTypeRules.length}");
 
-          cocok = false;
+    print("===== DATA SKIN TYPE =====");
+    for (var s in skinTypes) {
+      print("${s.code} - ${s.name}");
+    }
 
-          break;
+    print("===== DATA RULE JK =====");
+    for (var r in skinTypeRules) {
+      print("${r.kodeRule} -> ${r.hasil} -> ${r.gejala}");
+    }
+  }
+
+  // DIAGNOSA JENIS KULIT
+
+  SkinType? diagnoseSkinType(Map<String, bool> jawaban) {
+
+      print("===== JAWABAN USER =====");
+      print(jawaban);
+
+      print("===== RULE =====");
+
+      for (Rule rule in skinTypeRules) {
+
+        print("Rule ${rule.kodeRule}");
+
+        bool cocok = true;
+
+        for (String gejala in rule.gejala) {
+
+          print("$gejala = ${jawaban[gejala]}");
+
+          if (jawaban[gejala] != true) {
+            cocok = false;
+            break;
+          }
+
+        }
+
+        print("Cocok = $cocok");
+
+        if (cocok) {
+
+          print("HASIL ${rule.hasil}");
+
+          final index =
+              skinTypes.indexWhere((e) => e.code == rule.hasil);
+
+          if (index != -1) {
+            return skinTypes[index];
+          }
 
         }
 
       }
 
-      if (cocok) {
+      print("TIDAK ADA YANG COCOK");
 
-        return skinTypes.firstWhere(
+      return null;
+    }
 
-          (jenis) => jenis.code == rule.hasil,
+  // DIAGNOSA MASALAH KULIT
 
+  SkinProblem? diagnoseSkinProblem(
+    SkinType skinType,
+    Map<String, bool> jawaban,
+  ) {
+
+    Rule? bestRule;
+    int bestMatch = -1;
+
+    for (final rule in skinProblemRules) {
+
+      bool valid = true;
+      int match = 0;
+      int total = 0;
+
+      for (final fakta in rule.gejala) {
+
+        total++;
+
+        if (fakta.startsWith("JK")) {
+
+          if (fakta == skinType.code) {
+            match++;
+          } else {
+            valid = false;
+            break;
+          }
+
+        } else {
+
+          if (jawaban[fakta] == true) {
+            match++;
+          }
+
+        }
+
+      }
+
+      if (!valid) continue;
+
+      // Prioritas jika semua fakta terpenuhi
+      if (match == total) {
+
+        final index = skinProblems.indexWhere(
+          (e) => e.code == rule.hasil,
         );
 
+        if (index != -1) {
+          return skinProblems[index];
+        }
+
+      }
+
+      // Simpan rule dengan kecocokan terbesar
+      if (match > bestMatch) {
+        bestMatch = match;
+        bestRule = rule;
+      }
+
+    }
+
+    // fallback
+    if (bestRule != null) {
+
+      final index = skinProblems.indexWhere(
+        (e) => e.code == bestRule!.hasil,
+      );
+
+      if (index != -1) {
+        return skinProblems[index];
       }
 
     }
 
     return null;
-
   }
 
-  SkinProblem? diagnoseSkinProblem(
-
+  // REKOMENDASI PRODUK
+  
+  List<SkincareProduct> recommendProducts(
     SkinType skinType,
-
-    Map<String, bool> jawaban,
-
+    SkinProblem skinProblem,
   ) {
 
-    for (Rule rule in skinProblemRules) {
+    final List<SkincareProduct> hasil = [];
+    final Set<String> added = {};
+
+    for (final rule in productRules) {
 
       bool cocok = true;
 
-      for (String fakta in rule.gejala) {
+      for (final fakta in rule.gejala) {
 
         if (fakta.startsWith("JK")) {
 
           if (fakta != skinType.code) {
-
             cocok = false;
-
             break;
-
           }
 
-        } else {
+        }
 
-          if (jawaban[fakta] != true) {
+        else if (fakta.startsWith("PK")) {
 
+          if (fakta != skinProblem.code) {
             cocok = false;
-
             break;
-
           }
 
         }
 
       }
 
-      if (cocok) {
+      if (!cocok) continue;
 
-        return skinProblems.firstWhere(
+      final index = products.indexWhere(
+        (e) => e.code == rule.hasil,
+      );
 
-          (item) => item.code == rule.hasil,
+      if (index == -1) continue;
 
-        );
+      if (!added.contains(products[index].code)) {
 
-      }
-
-    }
-
-    return null;
-
-  }
-
-  List<SkincareProduct> recommendProducts(
-
-    SkinType skinType,
-
-    SkinProblem skinProblem,
-
-  ) {
-
-    List<SkincareProduct> rekomendasi = [];
-
-    for (Rule rule in productRules) {
-
-      bool cocok = true;
-
-      for (String fakta in rule.gejala) {
-
-        if (fakta.startsWith("JK")) {
-
-          if (skinType.code != fakta) {
-
-            cocok = false;
-
-            break;
-
-          }
-
-        } else if (fakta.startsWith("MK")) {
-
-          if (skinProblem.code != fakta) {
-
-            cocok = false;
-
-            break;
-
-          }
-
-        }
-
-      }
-
-      if (cocok) {
-
-        try {
-
-          final produk = products.firstWhere(
-
-            (item) => item.code == rule.hasil,
-
-          );
-
-          rekomendasi.add(produk);
-
-        } catch (_) {}
+        hasil.add(products[index]);
+        added.add(products[index].code);
 
       }
 
     }
 
-    return rekomendasi;
-
+    return hasil;
   }
 
-    /// ==========================================
-  /// MENGHITUNG TINGKAT KECOCOKAN (CONFIDENCE)
-  /// ==========================================
-  double calculateConfidence(
-    SkinType skinType,
-    SkinProblem skinProblem,
-    Map<String, bool> jawaban,
-  ) {
-    double skinTypeScore = 0;
-    double skinProblemScore = 0;
+  // MENGHITUNG TINGKAT KECOCOKAN DIAGNOSA
 
-    // ==========================
-    // RULE JENIS KULIT
-    // ==========================
-    for (Rule rule in skinTyperules) {
-      if (rule.hasil != skinType.code) continue;
+    double calculateConfidence(
+      SkinType skinType,
+      SkinProblem skinProblem,
+      Map<String, bool> jawaban,
+    ) {
+      
+      // MENGHITUNG SCORE JENIS KULIT (40%)
 
-      int cocok = 0;
+      double skinScore = 0;
 
-      for (String gejala in rule.gejala) {
+      final skinRule = skinTypeRules.firstWhere(
+        (rule) => rule.hasil == skinType.code,
+      );
+
+      int skinMatch = 0;
+
+      for (final gejala in skinRule.gejala) {
         if (jawaban[gejala] == true) {
-          cocok++;
+          skinMatch++;
         }
       }
 
-      skinTypeScore = cocok / rule.gejala.length;
-      break;
-    }
+      skinScore = skinMatch / skinRule.gejala.length;
 
-    // ==========================
-    // RULE MASALAH KULIT
-    // ==========================
-    for (Rule rule in skinProblemRules) {
-      if (rule.hasil != skinProblem.code) continue;
+      // MENGHITUNG MASALAH KULIT (60%)
 
-      int cocok = 0;
-      int total = 0;
+      final Set<String> problemSymptoms = {};
 
-      for (String fakta in rule.gejala) {
-        total++;
+      for (final rule in skinProblemRules) {
+        if (rule.hasil != skinProblem.code) continue;
 
-        if (fakta.startsWith("JK")) {
-          if (fakta == skinType.code) {
-            cocok++;
-          }
-        } else {
-          if (jawaban[fakta] == true) {
-            cocok++;
+        for (final fakta in rule.gejala) {
+          if (fakta.startsWith("G")) {
+            problemSymptoms.add(fakta);
           }
         }
       }
 
-      skinProblemScore = cocok / total;
-      break;
+      int problemMatch = 0;
+
+      for (final gejala in problemSymptoms) {
+        if (jawaban[gejala] == true) {
+          problemMatch++;
+        }
+      }
+
+      double problemScore = 0;
+
+      if (problemSymptoms.isNotEmpty) {
+        problemScore = problemMatch / problemSymptoms.length;
+      }
+
+      // ===========================
+      // TOTAL SCORE
+      // ===========================
+
+      double total =
+          (skinScore * 0.4) +
+          (problemScore * 0.6);
+
+      return total * 100;
     }
-
-    double confidence =
-        ((skinTypeScore + skinProblemScore) / 2) * 100;
-
-    if (confidence < 0) confidence = 0;
-    if (confidence > 100) confidence = 100;
-
-    return confidence;
-  }
 }

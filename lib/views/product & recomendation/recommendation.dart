@@ -51,7 +51,7 @@ class _RecommendationPageState
 
     return controller.products.where((item) {
 
-      return item.brand
+      return item.category
           .toLowerCase()
           .contains(
             selectedCategory.toLowerCase(),

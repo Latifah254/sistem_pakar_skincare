@@ -74,7 +74,7 @@ class SkincareCard extends StatelessWidget {
                   const SizedBox(height: 4),
 
                   Text(
-                    product.brand,
+                    product.category,
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 14,

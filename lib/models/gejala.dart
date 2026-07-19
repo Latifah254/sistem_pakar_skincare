@@ -11,9 +11,9 @@ class Gejala {
 
   factory Gejala.fromJson(Map<String, dynamic> json) {
     return Gejala(
-      id: json['id'],
-      code: json['code'],
-      question: json['question'],
+      id: int.parse(json['id'].toString()),
+      code: json['code'].toString(),
+      question: json['question'].toString(),
     );
   }
 

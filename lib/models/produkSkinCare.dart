@@ -2,33 +2,33 @@ class SkincareProduct {
   final int id;
   final String code;
   final String name;
-  final String brand;
+  final String category;
   final String description;
   final String ingredient;
-  final String usage;
+  final String cara_pakai;
   final String image;
 
   SkincareProduct({
     required this.id,
     required this.code,
     required this.name,
-    required this.brand,
+    required this.category,
     required this.description,
     required this.ingredient,
-    required this.usage,
+    required this.cara_pakai,
     required this.image,
   });
 
   factory SkincareProduct.fromJson(Map<String, dynamic> json) {
     return SkincareProduct(
-      id: json['id'],
-      code: json['code'],
-      name: json['name'],
-      brand: json['category'],
-      description: json['description'],
-      ingredient: json["ingredient"],
-      usage: json["usage"],
-      image: json["image"],
+      id: int.parse(json['id'].toString()),
+      code: json['code'].toString(),
+      name: json['name'].toString(),
+      category: json['category'].toString(),
+      description: json['description'].toString(),
+      ingredient: json['ingredient'].toString(),
+      cara_pakai: json['cara_pakai'].toString(),
+      image: json['image'].toString(),
     );
   }
 
@@ -37,11 +37,11 @@ class SkincareProduct {
       "id": id,
       "code": code,
       "name": name,
-      "category": brand,
+      "category": category,
       "description": description,
-      "ingredient":ingredient,
-      "usage":usage,
-      "image":image,
+      "ingredient": ingredient,
+      "cara_pakai": cara_pakai,
+      "image": image,
     };
   }
 }

@@ -130,7 +130,7 @@ class ProductDetailPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
-                  product.brand,
+                  product.category,
                   style: const TextStyle(
                     color: Color(0xff2E8B57),
                     fontWeight: FontWeight.bold,
@@ -173,7 +173,7 @@ class ProductDetailPage extends StatelessWidget {
               _buildInfoCard(
                 title: "Cara Penggunaan",
                 icon: Icons.menu_book_outlined,
-                content: product.usage,
+                content: product.cara_pakai,
                 iconColor: Colors.orange,
               ),
 

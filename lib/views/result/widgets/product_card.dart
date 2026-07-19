@@ -20,7 +20,7 @@ class ProductCard extends StatelessWidget {
         ),
 
         title: Text(product.name),
-        subtitle: Text(product.brand),
+        subtitle: Text(product.category),
         trailing: const Icon(
           Icons.arrow_forward_ios,
           size: 16,

@@ -11,9 +11,9 @@ class SkinProblem {
 
   factory SkinProblem.fromJson(Map<String, dynamic> json) {
     return SkinProblem(
-      id: json['id'],
-      code: json['code'],
-      name: json['name'],
+      id: int.parse(json['id'].toString()),
+      code: json['code'].toString(),
+      name: json['name'].toString(),
     );
   }
 

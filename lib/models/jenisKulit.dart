@@ -11,11 +11,11 @@ class SkinType {
 
   factory SkinType.fromJson(Map<String, dynamic> json) {
     return SkinType(
-      id: json['id'],
-      code: json['code'],
-      name: json['name'],
+      id: int.parse(json['id'].toString()),
+      code: json['code'].toString(),
+      name: json['name'].toString(),
     );
-  }
+}
 
   Map<String, dynamic> toJson() {
     return {
