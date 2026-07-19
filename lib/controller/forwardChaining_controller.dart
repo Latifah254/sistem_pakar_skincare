@@ -54,18 +54,18 @@ class ForwardChainingController extends GetxController {
       await ProductRuleRepository.getRules(),
     );
 
-    print("Skin Type : ${skinTypes.length}");
-    print("Rule JK : ${skinTypeRules.length}");
+    // print("Skin Type : ${skinTypes.length}");
+    // print("Rule JK : ${skinTypeRules.length}");
 
-    print("===== DATA SKIN TYPE =====");
-    for (var s in skinTypes) {
-      print("${s.code} - ${s.name}");
-    }
+    // print("===== DATA SKIN TYPE =====");
+    // for (var s in skinTypes) {
+    //   print("${s.code} - ${s.name}");
+    // }
 
-    print("===== DATA RULE JK =====");
-    for (var r in skinTypeRules) {
-      print("${r.kodeRule} -> ${r.hasil} -> ${r.gejala}");
-    }
+    // print("===== DATA RULE JK =====");
+    // for (var r in skinTypeRules) {
+    //   print("${r.kodeRule} -> ${r.hasil} -> ${r.gejala}");
+    // }
   }
 
   // DIAGNOSA JENIS KULIT
